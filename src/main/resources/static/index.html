@@ -1,0 +1,73 @@
+<html>
+<body>
+	<a href="/create-user.html">Create User</a>
+	<a href="/index.html">List Users</a>
+	<center><h3><u>List Users</u></h3></center>
+	<table id="listUser" border=1>
+		<tr>
+			<th>ID</th>
+			<th>Name</th>
+			<th>Last Name</th>
+			<th>E-mail</th>
+			<th>Roles</th>
+			<th>Active</th>
+			<th>Actions</th>
+		</tr>
+	</table>
+	<script type="text/javascript" src="jquery.js"></script>
+	<script type="text/javascript">
+		var listUserAction = {
+			"async" : false,
+			"crossDomain" : false,
+			"url" : "http://localhost:8082/api/user/list",
+			"method" : "GET",
+			"processData" : false,
+		}
+		
+		$
+				.ajax(listUserAction)
+				.done(
+						function(response) {
+							for (var index = 0; index < response.length; index++) {
+								var user = response[index];
+								var isActive = "No";
+								if (1 == user["isActive"]) {
+									isActive = "Yes";
+								}
+								$("#listUser")
+										.append(
+												"<tr><td>"
+														+ user["id"]
+														+ "</td><td>"
+														+ user["name"]
+														+ "</td><td>"
+														+ user["lastName"]
+														+ "</td><td>"
+														+ user["email"]
+														+ "</td><td>"
+														+ JSON
+																.stringify(user["roles"])
+														+ "</td><td>"
+														+ isActive
+														+ "</td><td><button onClick='test("+user["id"]+")'>Delete</button></td></tr>")
+							}
+						});
+		
+		function test(id){
+			alert("HI");
+			$.ajax({
+				type:"DELETE",
+				url:"http://localhost:8082/api/user/"+id,
+				complete:function(response){
+					/*if(response.status==302){
+						alert("inside....");
+						window.location.href="http://localhost:8082/login";
+					}else{
+						alert("outside...")
+					}*/
+				}
+			});
+		}
+	</script>
+</body>
+</html>

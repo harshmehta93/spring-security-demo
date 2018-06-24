@@ -1,0 +1,60 @@
+<html>
+<body>
+	<a href="/create-user.html">Create User</a>
+	<a href="/index.html">List Users</a>
+	<center><h3><u>Create a new User</u></h3></center>
+	Name:
+	<input type="text" id="name" name="name">
+	<br> Last Name:
+	<input type="text" id="lname" name="lname">
+	<br> E-mail:
+	<input type="text" id="email" name="email">
+	<br> Password:
+	<input type="password" id="password" name="password">
+	<br> Roles:
+	<select id="roles" name="roles">
+		<option value="ADMIN">ADMIN</option>
+		<option value="USER">USER</option>
+	</select>
+	<input type="button" id="submit" name="submit" value="Submit">
+
+	<script type="text/javascript" src="jquery.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function() {
+			$("#submit").click(function() {
+				var role = {};
+				var selectedRole =$("#roles option:selected").text();
+				if("ADMIN" == selectedRole){
+					role["id"]=1;
+				}else{
+					role["id"]=2;
+				}
+				role["role"] = selectedRole;
+				
+				var roles = new Array(role);
+				
+				var user = {};
+				user["name"] = $("#name").val();
+				user["lastName"] = $("#lname").val();
+				user["email"] = $("#email").val();
+				user["password"] = $("#password").val();
+				user["roles"] = roles;
+
+				$.ajax({
+					type:"POST",
+					dataType: "json",
+					data:JSON.stringify(user),
+					headers:{
+						"Content-Type":"application/json"
+					},
+					url:"http://localhost:8082/api/user/register",
+					success:function(response){
+						window.location.href="http://localhost:8082/";
+					}
+				});
+				
+			});
+		});
+	</script>
+</body>
+</html>
